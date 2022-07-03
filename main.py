@@ -81,6 +81,13 @@ def get_id_first_project():
     return get_all_projects()[0]['id']
 
 
+def get_save_json(tag):
+    write_file(
+        tag,
+        send_get_request_project(tag).json()
+    )
+
+
 def get_colors():
     return send_get_request_project('colors').json()
 
@@ -104,8 +111,8 @@ def get_screens():
 if __name__ == '__main__':
     id_project = get_id_first_project()
 
-    write_file('color', get_colors())
-    write_file('text_styles', get_text_styles())
-    write_file('components', get_components())
-    write_file('design_tokens', get_design_tokens())
-    write_file('screens', get_screens())
+    get_save_json('colors')
+    get_save_json('text_styles')
+    get_save_json('components')
+    get_save_json('design_tokens')
+    get_save_json('screens')
