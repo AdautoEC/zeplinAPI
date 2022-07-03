@@ -136,7 +136,6 @@ def formatter_xml_file():
     file.close()
 
 
-
 if __name__ == '__main__':
     xml_file_name = 'res/values/colors.xml'
     id_project = get_id_first_project()
