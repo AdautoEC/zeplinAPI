@@ -1,4 +1,6 @@
 import requests
+import json
+from munch import DefaultMunch
 
 '''
 Description: This test script aims to capture the values coming from the Zeplin API and use them in 
@@ -31,6 +33,25 @@ get_all_projects_params = {
 }
 id_project = ""
 highlighter = '--------------------------------------------------'
+
+
+def json2class(json_object):
+    return DefaultMunch.fromDict(json_object)
+
+
+def write_file(tag, json_object):
+    file = open('responses/' + tag + '.json', 'w')
+    if type(json_object) == list:
+        file.write(
+            '[' +
+            (",\n".join(str(obj) for obj in json_object)).replace('\'', '\"') +
+            ']'
+        )
+    elif type(json_object) == dict:
+        file.write(json.dumps(json_object).replace('\'', '\"'))
+    else:
+        file.write(json_object.replace('\'', '\"'))
+    file.close()
 
 
 def send_get_request(url, params=None):
@@ -77,19 +98,8 @@ def get_design_tokens():
 
 if __name__ == '__main__':
     id_project = get_id_first_project()
-    colors = get_colors()
-    text_styles = get_text_styles()
-    components = get_components()
-    design_tokens = get_design_tokens()
-    print('COLOR' + highlighter)
-    print(colors[0])
-    print('END COLOR' + highlighter + '\n')
-    print('TEXT STYLES' + highlighter)
-    print(text_styles[0])
-    print('END TEXT STYLES' + highlighter + '\n')
-    print('COMPONENTS' + highlighter)
-    print(components[0])
-    print('END COMPONENTS' + highlighter + '\n')
-    print('DESIGN TOKENS' + highlighter)
-    print(design_tokens)
-    print('END DESIGN TOKENS' + highlighter + '\n')
+
+    write_file('color', get_colors())
+    write_file('text_styles', get_text_styles())
+    write_file('components', get_components())
+    write_file('design_tokens', get_design_tokens())
