@@ -1,6 +1,8 @@
 import requests
 import json
+import matplotlib
 from munch import DefaultMunch
+import xml.etree.ElementTree as et
 
 '''
 Description: This test script aims to capture the values coming from the Zeplin API and use them in 
@@ -38,6 +40,10 @@ highlighter = '--------------------------------------------------'
 
 def json2class(json_object):
     return DefaultMunch.fromDict(json_object)
+
+
+def rgba_to_hex(rgba):
+    return '%02x%02x%02x%02X' % rgba
 
 
 def write_file(tag, json_object):
@@ -108,11 +114,39 @@ def get_screens():
     return send_get_request_project('design_tokens').json()
 
 
-if __name__ == '__main__':
-    id_project = get_id_first_project()
+def add_tag_xml(tag, value, attrs):
+    new_color = et.SubElement(my_root, tag)
+    new_color.text = value
+    for attr in attrs:
+        new_color.set(attr[0], attr[1])
 
-    get_save_json('colors')
+
+def color_obj2xml(colors):
+    for color in colors:
+        attributes = [('name', color.name.replace(' ', '_').replace('-', '_').lower()), ('id', color.id)]
+        add_tag_xml('color', '#' + rgba_to_hex((color.r, color.g, color.b, color.a * 255)), attributes)
+
+
+def formatter_xml_file():
+    file = open(xml_file_name, 'r')
+    new_xml = '<?xml version="1.0" encoding="utf-8"?>\n' + file.read()
+    file.close()
+    file = open(xml_file_name, 'w')
+    file.write(new_xml)
+    file.close()
+
+
+
+if __name__ == '__main__':
+    xml_file_name = 'res/values/colors.xml'
+    id_project = get_id_first_project()
+    my_tree = et.parse(xml_file_name)
+    my_root = my_tree.getroot()
+    color_obj2xml(json2class(get_colors()))
+    my_tree.write(xml_file_name)
+    formatter_xml_file()
+    '''get_save_json('colors')
     get_save_json('text_styles')
     get_save_json('components')
     get_save_json('design_tokens')
-    get_save_json('screens')
+    get_save_json('screens')'''
