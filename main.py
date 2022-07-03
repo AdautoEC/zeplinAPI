@@ -43,7 +43,7 @@ def json2class(json_object):
 
 
 def rgba_to_hex(rgba):
-    return '%02x%02x%02x%02X' % rgba
+    return '%02X%02X%02X%02X' % rgba
 
 
 def write_file(tag, json_object):
@@ -122,9 +122,13 @@ def add_tag_xml(tag, value, attrs):
 
 
 def color_obj2xml(colors):
+    all_color_id = {color.attrib['id']: color for color in my_root.iter('color')}
     for color in colors:
-        attributes = [('name', color.name.replace(' ', '_').replace('-', '_').lower()), ('id', color.id)]
-        add_tag_xml('color', '#' + rgba_to_hex((color.r, color.g, color.b, color.a * 255)), attributes)
+        if color.id in all_color_id.keys():
+            all_color_id[color.id].text = '#' + rgba_to_hex((color.r, color.g, color.b, color.a * 255))
+        else:
+            attributes = [('name', color.name.replace(' ', '_').replace('-', '_').lower()), ('id', color.id)]
+            add_tag_xml('color', '#' + rgba_to_hex((color.r, color.g, color.b, color.a * 255)), attributes)
 
 
 def formatter_xml_file():
