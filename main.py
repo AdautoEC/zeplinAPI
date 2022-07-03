@@ -6,6 +6,7 @@ from munch import DefaultMunch
 Description: This test script aims to capture the values coming from the Zeplin API and use them in 
 Daycoval's mobile projects. 
 Link_to_developer: https://app.zeplin.io/profile/developer
+Documentation: https://docs.zeplin.dev/docs/getting-started-with-zeplin-api
 Client_id: 62c0b9fc31ced8193a0dfed3
 Token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0eXBlIjoicGVyc29uYWxfYWNjZXNzX3Rva2VuIiwiY2xpZW50X2l
 kIjoiNjJjMGM2OTJkYTA2OWMxOGZmYjc3YWU4Iiwic2NvcGUiOiJhZG1pbiIsImlhdCI6MTY1NjgwMDkxNCwiZXhwIjoxOTcyMz
@@ -96,6 +97,10 @@ def get_design_tokens():
     return send_get_request_project('design_tokens').json()
 
 
+def get_screens():
+    return send_get_request_project('design_tokens').json()
+
+
 if __name__ == '__main__':
     id_project = get_id_first_project()
 
@@ -103,3 +108,4 @@ if __name__ == '__main__':
     write_file('text_styles', get_text_styles())
     write_file('components', get_components())
     write_file('design_tokens', get_design_tokens())
+    write_file('screens', get_screens())
